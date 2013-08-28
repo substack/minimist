@@ -35,7 +35,7 @@ module.exports = function (args, opts) {
         setKey(argv, key.split('.'), value);
         
         (aliases[key] || []).forEach(function (x) {
-            argv[x] = argv[key];
+            setKey(argv, x.split('.'), value);
         });
     }
     
@@ -129,16 +129,27 @@ module.exports = function (args, opts) {
     }
     
     Object.keys(defaults).forEach(function (key) {
-        if (!(key in argv)) {
-            argv[key] = defaults[key];
-            if (key in aliases) {
-                argv[aliases[key]] = defaults[key];
-            }
+        if (!hasKey(argv, key.split('.'))) {
+            setKey(argv, key.split('.'), defaults[key]);
+            
+            (aliases[key] || []).forEach(function (x) {
+                setKey(argv, x.split('.'), defaults[key]);
+            });
         }
     });
     
     return argv;
 };
+
+function hasKey (obj, keys) {
+    var o = obj;
+    keys.slice(0,-1).forEach(function (key) {
+        o = (o[key] || {});
+    });
+
+    var key = keys[keys.length - 1];
+    return key in o;
+}
 
 function setKey (obj, keys, value) {
     var o = obj;
