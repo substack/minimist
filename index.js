@@ -28,6 +28,13 @@ module.exports = function (args, opts) {
         setArg(key, defaults[key] === undefined ? false : defaults[key]);
     });
     
+    var notFlags = [];
+
+    if (args.indexOf('--') !== -1) {
+        notFlags = args.slice(args.indexOf('--')+1);
+        args = args.slice(0, args.indexOf('--'));
+    }
+
     function setArg (key, val) {
         var value = !flags.strings[key] && isNumber(val)
             ? Number(val) : val
@@ -42,11 +49,7 @@ module.exports = function (args, opts) {
     for (var i = 0; i < args.length; i++) {
         var arg = args[i];
         
-        if (arg === '--') {
-            argv._.push.apply(argv._, args.slice(i + 1));
-            break;
-        }
-        else if (arg.match(/^--.+=/)) {
+        if (arg.match(/^--.+=/)) {
             // Using [\s\S] instead of . because js doesn't support the
             // 'dotall' regex modifier. See:
             // http://stackoverflow.com/a/1068308/13216
@@ -111,10 +114,7 @@ module.exports = function (args, opts) {
             
             var key = arg.slice(-1)[0];
             if (!broken && key !== '-') {
-                if (args[i+1] === '--') {
-                    setArg(key, true);
-                }
-                else if (args[i+1] && !/^(-|--)[^-]/.test(args[i+1])
+                if (args[i+1] && !/^(-|--)[^-]/.test(args[i+1])
                 && !flags.bools[key]
                 && (aliases[key] ? !flags.bools[aliases[key]] : true)) {
                     setArg(key, args[i+1]);
@@ -146,6 +146,10 @@ module.exports = function (args, opts) {
         }
     });
     
+    notFlags.forEach(function(key) {
+        argv._.push(key);
+    });
+
     return argv;
 };
 
