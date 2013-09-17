@@ -80,6 +80,12 @@ module.exports = function (args, opts) {
             var broken = false;
             for (var j = 0; j < letters.length; j++) {
                 var next = arg.slice(j+2);
+
+                if (letters[j+1] && letters[j+1] === '=') {
+                    setArg(letters[j], arg.slice(j+3));
+                    broken = true;
+                    break;
+                }
                 
                 if (next === '-') {
                     setArg(letters[j], next)
