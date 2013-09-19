@@ -65,3 +65,21 @@ test('short and long', function (t) {
     );
     t.end();
 });
+
+test('-a=b', function (t) {
+    t.plan(2);
+    t.deepEqual(parse([ '-n=smth' ]), { _: [], n: 'smth' });
+    t.deepEqual(
+        parse([ '-abn=smth' ]),
+        { _: [], a: true, b: true, n: 'smth' }
+    );
+});
+
+test('-a =b', function (t) {
+    t.plan(2);
+    t.deepEqual(parse([ '-n', '=smth' ]), { _: [], n: '=smth' });
+    t.deepEqual(
+        parse([ '-abn', '=smth' ]),
+        { _: [], a: true, b: true, n: '=smth' }
+    );
+});
