@@ -162,6 +162,26 @@ test('stringArgs', function (t) {
     t.end();
 });
 
+test('empty strings', function(t) {
+    var s = parse([ '-s' ], { string: 's' }).s;
+    t.equal(s, '');
+    t.equal(typeof s, 'string');
+
+    var str = parse([ '--str' ], { string: 'str' }).str;
+    t.equal(str, '');
+    t.equal(typeof str, 'string');
+
+    var letters = parse([ '-at' ], {
+        string: 't'
+    });
+
+    t.equal(letters.a, true);
+    t.equal(letters.t, '');
+
+    t.end();
+});
+
+
 test('slashBreak', function (t) {
     t.same(
         parse([ '-I/foo/bar/baz' ]),

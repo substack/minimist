@@ -74,7 +74,7 @@ module.exports = function (args, opts) {
                 i++;
             }
             else {
-                setArg(key, true);
+                setArg(key, flags.strings[key] ? '' : true);
             }
         }
         else if (/^-[^-]+/.test(arg)) {
@@ -119,7 +119,7 @@ module.exports = function (args, opts) {
                     i++;
                 }
                 else {
-                    setArg(key, true);
+                    setArg(key, flags.strings[key] ? '' : true);
                 }
             }
         }
