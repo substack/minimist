@@ -102,7 +102,7 @@ module.exports = function (args, opts) {
                     break;
                 }
                 else {
-                    setArg(letters[j], true);
+                    setArg(letters[j], flags.strings[letters[j]] ? '' : true);
                 }
             }
             

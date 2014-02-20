@@ -171,11 +171,12 @@ test('empty strings', function(t) {
     t.equal(str, '');
     t.equal(typeof str, 'string');
 
-    var letters = parse([ '-at' ], {
-        string: 't'
+    var letters = parse([ '-art' ], {
+        string: [ 'a', 't' ]
     });
 
-    t.equal(letters.a, true);
+    t.equal(letters.a, '');
+    t.equal(letters.r, true);
     t.equal(letters.t, '');
 
     t.end();
