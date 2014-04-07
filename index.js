@@ -1,16 +1,16 @@
 module.exports = function (args, opts) {
     if (!opts) opts = {};
-    
+
     var flags = { bools : {}, strings : {} };
-    
+
     [].concat(opts['boolean']).filter(Boolean).forEach(function (key) {
         flags.bools[key] = true;
     });
-    
+
     [].concat(opts.string).filter(Boolean).forEach(function (key) {
         flags.strings[key] = true;
     });
-    
+
     var aliases = {};
     Object.keys(opts.alias || {}).forEach(function (key) {
         aliases[key] = [].concat(opts.alias[key]);
@@ -20,14 +20,14 @@ module.exports = function (args, opts) {
             }));
         });
     });
-    
+
     var defaults = opts['default'] || {};
-    
+
     var argv = { _ : [] };
     Object.keys(flags.bools).forEach(function (key) {
         setArg(key, defaults[key] === undefined ? false : defaults[key]);
     });
-    
+
     var notFlags = [];
 
     if (args.indexOf('--') !== -1) {
@@ -40,20 +40,23 @@ module.exports = function (args, opts) {
             ? Number(val) : val
         ;
         setKey(argv, key.split('.'), value);
-        
+
         (aliases[key] || []).forEach(function (x) {
             setKey(argv, x.split('.'), value);
         });
     }
-    
+
     for (var i = 0; i < args.length; i++) {
         var arg = args[i];
-        
         if (/^--.+=/.test(arg)) {
             // Using [\s\S] instead of . because js doesn't support the
             // 'dotall' regex modifier. See:
             // http://stackoverflow.com/a/1068308/13216
             var m = arg.match(/^--([^=]+)=([\s\S]*)$/);
+            if(/\[+/.test(m[2][0])){
+                m[2] = getAsArray(args.slice(i));
+                i += m[2].length - 1;
+            }
             setArg(m[1], m[2]);
         }
         else if (/^--no-.+/.test(arg)) {
@@ -66,8 +69,13 @@ module.exports = function (args, opts) {
             if (next !== undefined && !/^-/.test(next)
             && !flags.bools[key]
             && (aliases[key] ? !flags.bools[aliases[key]] : true)) {
+                var incrementer = 1;
+                if(/\[+/.test(next[0])){
+                    next = getAsArray(args.slice(i));
+                    incrementer = (next.length - 1);
+                }
                 setArg(key, next);
-                i++;
+                i += incrementer;
             }
             else if (/^(true|false)$/.test(next)) {
                 setArg(key, next === 'true');
@@ -79,23 +87,23 @@ module.exports = function (args, opts) {
         }
         else if (/^-[^-]+/.test(arg)) {
             var letters = arg.slice(1,-1).split('');
-            
+
             var broken = false;
             for (var j = 0; j < letters.length; j++) {
                 var next = arg.slice(j+2);
-                
+
                 if (next === '-') {
                     setArg(letters[j], next)
                     continue;
                 }
-                
+
                 if (/[A-Za-z]/.test(letters[j])
                 && /-?\d+(\.\d*)?(e-?\d+)?$/.test(next)) {
                     setArg(letters[j], next);
                     broken = true;
                     break;
                 }
-                
+
                 if (letters[j+1] && letters[j+1].match(/\W/)) {
                     setArg(letters[j], arg.slice(j+2));
                     broken = true;
@@ -105,7 +113,7 @@ module.exports = function (args, opts) {
                     setArg(letters[j], flags.strings[letters[j]] ? '' : true);
                 }
             }
-            
+
             var key = arg.slice(-1)[0];
             if (!broken && key !== '-') {
                 if (args[i+1] && !/^(-|--)[^-]/.test(args[i+1])
@@ -124,22 +132,25 @@ module.exports = function (args, opts) {
             }
         }
         else {
-            argv._.push(
-                flags.strings['_'] || !isNumber(arg) ? arg : Number(arg)
-            );
+            var _arg = flags.strings['_'] || isNumber(arg) ? Number(arg) : null;
+            if(!_arg && /\[+/.test(arg[0])){
+                _arg = getAsArray(args.slice(i));
+                i += _arg.length - 1;
+            }
+            argv._.push(_arg);
         }
     }
-    
+
     Object.keys(defaults).forEach(function (key) {
         if (!hasKey(argv, key.split('.'))) {
             setKey(argv, key.split('.'), defaults[key]);
-            
+
             (aliases[key] || []).forEach(function (x) {
                 setKey(argv, x.split('.'), defaults[key]);
             });
         }
     });
-    
+
     notFlags.forEach(function(key) {
         argv._.push(key);
     });
@@ -163,7 +174,7 @@ function setKey (obj, keys, value) {
         if (o[key] === undefined) o[key] = {};
         o = o[key];
     });
-    
+
     var key = keys[keys.length - 1];
     if (o[key] === undefined || typeof o[key] === 'boolean') {
         o[key] = value;
@@ -174,6 +185,27 @@ function setKey (obj, keys, value) {
     else {
         o[key] = [ o[key], value ];
     }
+}
+
+function getAsArray(argArray){
+    var arg = argArray
+                    .toString()
+                    .match(/\[([^<]*?)]/)[0]
+                    .replace(/(\[|\])/g, '')
+                    .replace(/ /g, '')
+                    .replace(/,,/g, ',')
+                    .split(',')
+                    .map(String);
+
+    for(var i = 0, j = arg.length; i < j; i++){
+        if(isNumber(arg[i])){
+            arg[i] = Number(arg[i]);
+        } else if(arg[i] == "true" || arg[i] == "false"){
+            arg[i] = (arg[i] == "true" ? true : false);
+        }
+    }
+
+    return arg;
 }
 
 function isNumber (x) {
