@@ -72,7 +72,7 @@ module.exports = function (args, opts) {
                 var incrementer = 1;
                 if(/\[+/.test(next[0])){
                     next = getAsArray(args.slice(i));
-                    incrementer = (next.length - 1);
+                    incrementer = next.length;
                 }
                 setArg(key, next);
                 i += incrementer;
@@ -189,19 +189,20 @@ function setKey (obj, keys, value) {
 
 function getAsArray(argArray){
     var arg = argArray
-                    .toString()
-                    .match(/\[([^<]*?)]/)[0]
-                    .replace(/(\[|\])/g, '')
-                    .replace(/ /g, '')
-                    .replace(/,,/g, ',')
-                    .split(',')
-                    .map(String);
+                .toString()
+                .match(/\[([^<]*?)]/)[0]
+                .replace(/(\[|\])/g, '')
+                .replace(/([^\\]),[, ]/g, '$1\n')
+                .replace(/\\/g, '')
+                .split('\n');
 
     for(var i = 0, j = arg.length; i < j; i++){
         if(isNumber(arg[i])){
             arg[i] = Number(arg[i]);
         } else if(arg[i] == "true" || arg[i] == "false"){
             arg[i] = (arg[i] == "true" ? true : false);
+        } else {
+            arg[i] = arg[i].replace(/^"|"$/g, '');
         }
     }
 

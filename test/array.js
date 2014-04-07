@@ -8,6 +8,13 @@ test('string array', function (t) {
     t.end();
 });
 
+test('string array with quotes/spacing', function (t) {
+    t.deepEqual(parse([ '--arr', '["This Is A Test"]' ]), { arr: ["This Is A Test"], _: [] });
+    t.deepEqual(parse([ '--arr=["This Is A Test"]' ]), { arr: ["This Is A Test"], _: [] });
+    t.deepEqual(parse([ '["This Is A Test"]' ]), { _: [["This Is A Test"]] });
+    t.end();
+});
+
 test('int array', function (t) {
     t.deepEqual(parse([ '--arr', '[5, 10, 50, 100]' ]), { arr: [5, 10, 50, 100], _: [] });
     t.deepEqual(parse([ '--arr=[5, 10, 50, 100]' ]), { arr: [5, 10, 50, 100], _: [] });
