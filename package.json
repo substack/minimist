@@ -1,6 +1,6 @@
 {
     "name": "minimist",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "parse argument options",
     "main": "index.js",
     "devDependencies": {
