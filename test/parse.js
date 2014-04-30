@@ -183,6 +183,29 @@ test('empty strings', function(t) {
 });
 
 
+test('string and alias', function(t) {
+    var x = parse([ '--str',  '000123' ], {
+        string: 's',
+        alias: { s: 'str' }
+    });
+
+    t.equal(x.str, '000123');
+    t.equal(typeof x.str, 'string');
+    t.equal(x.s, '000123');
+    t.equal(typeof x.s, 'string');
+
+    var y = parse([ '-s',  '000123' ], {
+        string: 'str',
+        alias: { str: 's' }
+    });
+
+    t.equal(y.str, '000123');
+    t.equal(typeof y.str, 'string');
+    t.equal(y.s, '000123');
+    t.equal(typeof y.s, 'string');
+    t.end();
+});
+
 test('slashBreak', function (t) {
     t.same(
         parse([ '-I/foo/bar/baz' ]),
