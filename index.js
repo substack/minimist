@@ -7,10 +7,6 @@ module.exports = function (args, opts) {
         flags.bools[key] = true;
     });
     
-    [].concat(opts.string).filter(Boolean).forEach(function (key) {
-        flags.strings[key] = true;
-    });
-    
     var aliases = {};
     Object.keys(opts.alias || {}).forEach(function (key) {
         aliases[key] = [].concat(opts.alias[key]);
@@ -19,6 +15,13 @@ module.exports = function (args, opts) {
                 return x !== y;
             }));
         });
+    });
+
+    [].concat(opts.string).filter(Boolean).forEach(function (key) {
+        flags.strings[key] = true;
+        if (aliases[key]) {
+            flags.strings[aliases[key]] = true;
+        }
     });
     
     var defaults = opts['default'] || {};
