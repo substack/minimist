@@ -2,10 +2,14 @@ module.exports = function (args, opts) {
     if (!opts) opts = {};
     
     var flags = { bools : {}, strings : {} };
-    
-    [].concat(opts['boolean']).filter(Boolean).forEach(function (key) {
-        flags.bools[key] = true;
-    });
+
+    if (typeof opts['boolean'] === 'boolean' && opts['boolean']) {
+      flags.allBools = true;
+    } else {
+      [].concat(opts['boolean']).filter(Boolean).forEach(function (key) {
+          flags.bools[key] = true;
+      });
+    }
     
     var aliases = {};
     Object.keys(opts.alias || {}).forEach(function (key) {
@@ -68,6 +72,7 @@ module.exports = function (args, opts) {
             var next = args[i + 1];
             if (next !== undefined && !/^-/.test(next)
             && !flags.bools[key]
+            && !flags.allBools
             && (aliases[key] ? !flags.bools[aliases[key]] : true)) {
                 setArg(key, next);
                 i++;
