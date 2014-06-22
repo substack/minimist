@@ -36,5 +36,8 @@
         "email": "mail@substack.net",
         "url": "http://substack.net"
     },
-    "license": "MIT"
+    "license": "MIT",
+    "files": [
+        "index.js"
+    ]
 }
