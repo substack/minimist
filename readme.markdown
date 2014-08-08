@@ -61,6 +61,8 @@ as boolean (e.g. affects `--foo`, not `-f` or `--foo=bar`)
 * `opts.alias` - an object mapping string names to strings or arrays of string
 argument names to use as aliases
 * `opts.default` - an object mapping string argument names to default values
+# `opts.stopEarly` - when true, populate `argv._` with everything after the
+first non-option
 * `opts['--']` - when true, populate `argv._` with everything before the `--`
 and `argv['--']` with everything after the `--`. Here's an example:
 
