@@ -135,6 +135,10 @@ module.exports = function (args, opts) {
             argv._.push(
                 flags.strings['_'] || !isNumber(arg) ? arg : Number(arg)
             );
+            if (opts.stopEarly) {
+                argv._.push.apply(argv._, args.slice(i + 1));
+                break;
+            }
         }
     }
     
