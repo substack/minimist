@@ -14,12 +14,12 @@ test('parse args', function (t) {
     );
     t.end();
 });
- 
+
 test('comprehensive', function (t) {
     t.deepEqual(
         parse([
             '--name=meowmers', 'bare', '-cats', 'woo',
-            '-h', 'awesome', '--multi=quux',
+            '-h', 'awesome', '--multi=quux', '--camel-case',
             '--key', 'value',
             '-b', '--bool', '--no-meep', '--multi=baz',
             '--', '--not-a-flag', 'eek'
@@ -36,6 +36,7 @@ test('comprehensive', function (t) {
             multi : [ 'quux', 'baz' ],
             meep : false,
             name : 'meowmers',
+            camelCase: true,
             _ : [ 'bare', '--not-a-flag', 'eek' ]
         }
     );
@@ -54,13 +55,13 @@ test('flag boolean value', function (t) {
         boolean: [ 't', 'verbose' ],
         default: { verbose: true }
     });
-    
+
     t.deepEqual(argv, {
         verbose: false,
         t: true,
         _: ['moo']
     });
-    
+
     t.deepEqual(typeof argv.verbose, 'boolean');
     t.deepEqual(typeof argv.t, 'boolean');
     t.end();
@@ -69,7 +70,7 @@ test('flag boolean value', function (t) {
 test('newlines in params' , function (t) {
     var args = parse([ '-s', "X\nX" ])
     t.deepEqual(args, { _ : [], s : "X\nX" });
-    
+
     // reproduce in bash:
     // VALUE="new
     // line"
@@ -83,7 +84,7 @@ test('strings' , function (t) {
     var s = parse([ '-s', '0001234' ], { string: 's' }).s;
     t.equal(s, '0001234');
     t.equal(typeof s, 'string');
-    
+
     var x = parse([ '-x', '56' ], { string: 'x' }).x;
     t.equal(x, '56');
     t.equal(typeof x, 'string');
@@ -183,7 +184,7 @@ test('nested dotted objects', function (t) {
         '--foo.quux.quibble', '5', '--foo.quux.o_O',
         '--beep.boop'
     ]);
-    
+
     t.same(argv.foo, {
         bar : 3,
         baz : 4,
