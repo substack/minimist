@@ -9,7 +9,7 @@ fanciful decoration.
 
 [![build status](https://secure.travis-ci.org/substack/minimist.png)](http://travis-ci.org/substack/minimist)
 
-# example
+## example
 
 ``` js
 var argv = require('minimist')(process.argv.slice(2));
@@ -33,13 +33,13 @@ $ node example/parse.js -x 3 -y 4 -n5 -abc --beep=boop foo bar baz
   beep: 'boop' }
 ```
 
-# methods
+## methods
 
 ``` js
 var parseArgs = require('minimist')
 ```
 
-## var argv = parseArgs(args, opts={})
+### var argv = parseArgs(args, opts={})
 
 Return an argument object `argv` populated with the array arguments from `args`.
 
@@ -78,7 +78,7 @@ unknown option is not added to `argv`.
 Note that with `opts['--']` set, parsing for arguments still stops after the
 `--`.
 
-# install
+## install
 
 With [npm](https://npmjs.org) do:
 
@@ -86,6 +86,6 @@ With [npm](https://npmjs.org) do:
 npm install minimist
 ```
 
-# license
+## license
 
 MIT
