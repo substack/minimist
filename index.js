@@ -64,14 +64,16 @@ module.exports = function (args, opts) {
         var value = !flags.strings[key] && isNumber(val)
             ? Number(val) : val
         ;
-        setKey(argv, key.split('.'), value);
+        setKey(argv, key, value);
         
-        (aliases[key] || []).forEach(function (x) {
-            setKey(argv, x.split('.'), value);
+        (aliases[key] || []).forEach(function (alias) {
+            setKey(argv, alias, value);
         });
     }
 
-    function setKey (obj, keys, value) {
+    function setKey (obj, fullKey, value) {
+        var keys = fullKey.split('.');
+
         var o = obj;
         keys.slice(0,-1).forEach(function (key) {
             if (o[key] === undefined) o[key] = {};
@@ -207,11 +209,11 @@ module.exports = function (args, opts) {
     
     // And set the default values for any omitted args.
     Object.keys(defaults).forEach(function (key) {
-        if (!hasKey(argv, key.split('.'))) {
-            setKey(argv, key.split('.'), defaults[key]);
+        if (!hasKey(argv, key)) {
+            setKey(argv, key, defaults[key]);
             
             (aliases[key] || []).forEach(function (x) {
-                setKey(argv, x.split('.'), defaults[key]);
+                setKey(argv, x, defaults[key]);
             });
         }
     });
@@ -231,7 +233,9 @@ module.exports = function (args, opts) {
     return argv;
 };
 
-function hasKey (obj, keys) {
+function hasKey (obj, fullKey) {
+    var keys = fullKey.split('.');
+
     var o = obj;
     keys.slice(0,-1).forEach(function (key) {
         o = (o[key] || {});
