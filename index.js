@@ -2,6 +2,7 @@ module.exports = function (args, opts) {
     if (!opts) opts = {};
     
     var flags = { bools : {}, strings : {}, unknownFn: null };
+    var everyBool = {};
 
     if (typeof opts['unknown'] === 'function') {
         flags.unknownFn = opts['unknown'];
@@ -12,6 +13,7 @@ module.exports = function (args, opts) {
     } else {
       [].concat(opts['boolean']).filter(Boolean).forEach(function (key) {
           flags.bools[key] = true;
+          everyBool[key] = true;
       });
     }
     
@@ -74,14 +76,37 @@ module.exports = function (args, opts) {
         });
 
         var key = keys[keys.length - 1];
-        if (o[key] === undefined || flags.bools[key] || typeof o[key] === 'boolean') {
-            o[key] = value;
-        }
-        else if (Array.isArray(o[key])) {
+        if (Array.isArray(o[key])) {
             o[key].push(value);
         }
+
+        else if (o[key] === undefined) {
+            o[key] = value;
+
+            if (typeof o[key] === 'boolean') {
+              everyBool[key] = true;
+            }
+        }
+        else if (everyBool[key] && value === true && o[key] /* == truthy */) {
+            o[key] = Number(o[key]);
+            o[key]++;
+        }
+        else if (flags.bools[key] ||
+                typeof value === 'boolean' && (
+                    everyBool[key] || typeof o[key] === 'boolean')) {
+            o[key] = value;
+        }
+
         else {
-            o[key] = [ o[key], value ];
+            if (everyBool[key] && isNumber(o[key])) {
+                o[key] = Array(o[key]).join('.|.').split('|').map(Boolean);
+                everyBool[key] = false;
+            }
+            else {
+                o[key] = [ o[key] ];
+            }
+
+            o[key].push(value);
         }
     }
     
