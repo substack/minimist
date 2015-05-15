@@ -1,6 +1,8 @@
 module.exports = function (args, opts) {
     if (!opts) opts = {};
     
+    // Ascertain which `minimist`-options have been passed, reading `flags`,
+    // `aliases`, and `defaults`;
     var flags = { bools : {}, strings : {}, unknownFn: null };
     var everyBool = {};
 
@@ -48,6 +50,7 @@ module.exports = function (args, opts) {
         args = args.slice(0, args.indexOf('--'));
     }
 
+    // Create a few helper-functions that break up the parsing process;
     function argDefined(key, arg) {
         return (flags.allBools && /^--[^=]+$/.test(arg)) ||
             flags.strings[key] || flags.bools[key] || aliases[key];
@@ -110,6 +113,7 @@ module.exports = function (args, opts) {
         }
     }
     
+    // Actually parse the arguments!
     for (var i = 0; i < args.length; i++) {
         var arg = args[i];
         
@@ -201,6 +205,7 @@ module.exports = function (args, opts) {
         }
     }
     
+    // And set the default values for any omitted args.
     Object.keys(defaults).forEach(function (key) {
         if (!hasKey(argv, key.split('.'))) {
             setKey(argv, key.split('.'), defaults[key]);
