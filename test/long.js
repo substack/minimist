@@ -27,5 +27,10 @@ test('long opts', function (t) {
         { host : 'localhost', port : 555, _ : [] },
         'long captures eq'
     );
+    t.deepEqual(
+        parse([ '--pow', '' ]),
+        { pow : '', _ : [] },
+        'long empty capture'
+    );
     t.end();
 });
