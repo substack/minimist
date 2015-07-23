@@ -1,7 +1,10 @@
 module.exports = function (args, opts) {
     if (!opts) opts = {};
     
+    // Ascertain which `minimist`-options have been passed, reading `flags`,
+    // `aliases`, and `defaults`;
     var flags = { bools : {}, strings : {}, unknownFn: null };
+    var everyBool = {};
 
     if (typeof opts['unknown'] === 'function') {
         flags.unknownFn = opts['unknown'];
@@ -12,6 +15,7 @@ module.exports = function (args, opts) {
     } else {
       [].concat(opts['boolean']).filter(Boolean).forEach(function (key) {
           flags.bools[key] = true;
+          everyBool[key] = true;
       });
     }
     
@@ -46,6 +50,7 @@ module.exports = function (args, opts) {
         args = args.slice(0, args.indexOf('--'));
     }
 
+    // Create a few helper-functions that break up the parsing process;
     function argDefined(key, arg) {
         return (flags.allBools && /^--[^=]+$/.test(arg)) ||
             flags.strings[key] || flags.bools[key] || aliases[key];
@@ -59,14 +64,16 @@ module.exports = function (args, opts) {
         var value = !flags.strings[key] && isNumber(val)
             ? Number(val) : val
         ;
-        setKey(argv, key.split('.'), value);
+        setKey(argv, key, value);
         
-        (aliases[key] || []).forEach(function (x) {
-            setKey(argv, x.split('.'), value);
+        (aliases[key] || []).forEach(function (alias) {
+            setKey(argv, alias, value);
         });
     }
 
-    function setKey (obj, keys, value) {
+    function setKey (obj, fullKey, value) {
+        var keys = fullKey.split('.');
+
         var o = obj;
         keys.slice(0,-1).forEach(function (key) {
             if (o[key] === undefined) o[key] = {};
@@ -74,17 +81,41 @@ module.exports = function (args, opts) {
         });
 
         var key = keys[keys.length - 1];
-        if (o[key] === undefined || flags.bools[key] || typeof o[key] === 'boolean') {
-            o[key] = value;
-        }
-        else if (Array.isArray(o[key])) {
+        if (Array.isArray(o[key])) {
             o[key].push(value);
         }
+
+        else if (o[key] === undefined) {
+            o[key] = value;
+
+            if (typeof o[key] === 'boolean') {
+              everyBool[key] = true;
+            }
+        }
+        else if (everyBool[key] && value === true && o[key] /* == truthy */) {
+            o[key] = Number(o[key]);
+            o[key]++;
+        }
+        else if (flags.bools[key] ||
+                typeof value === 'boolean' && (
+                    everyBool[key] || typeof o[key] === 'boolean')) {
+            o[key] = value;
+        }
+
         else {
-            o[key] = [ o[key], value ];
+            if (everyBool[key] && isNumber(o[key])) {
+                o[key] = Array(o[key]).join('.|.').split('|').map(Boolean);
+                everyBool[key] = false;
+            }
+            else {
+                o[key] = [ o[key] ];
+            }
+
+            o[key].push(value);
         }
     }
     
+    // Actually parse the arguments!
     for (var i = 0; i < args.length; i++) {
         var arg = args[i];
         
@@ -181,12 +212,13 @@ module.exports = function (args, opts) {
         }
     }
     
+    // And set the default values for any omitted args.
     Object.keys(defaults).forEach(function (key) {
-        if (!hasKey(argv, key.split('.'))) {
-            setKey(argv, key.split('.'), defaults[key]);
+        if (!hasKey(argv, key)) {
+            setKey(argv, key, defaults[key]);
             
             (aliases[key] || []).forEach(function (x) {
-                setKey(argv, x.split('.'), defaults[key]);
+                setKey(argv, x, defaults[key]);
             });
         }
     });
@@ -206,7 +238,9 @@ module.exports = function (args, opts) {
     return argv;
 };
 
-function hasKey (obj, keys) {
+function hasKey (obj, fullKey) {
+    var keys = fullKey.split('.');
+
     var o = obj;
     keys.slice(0,-1).forEach(function (key) {
         o = (o[key] || {});
