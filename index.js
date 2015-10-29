@@ -176,7 +176,14 @@ module.exports = function (args, opts) {
                     i++;
                 }
                 else {
-                    setArg(key, flags.strings[key] ? '' : true, arg);
+                    var negated = false;
+                    (aliases[key] || []).forEach(function (x) {
+                        if( /^no-.+/.test(x) ) {
+                            key = x.match(/^no-(.+)/)[1];
+                            negated = true;
+                        }
+                    });
+                    setArg(key, flags.strings[key] ? '' : !negated, arg);
                 }
             }
         }
