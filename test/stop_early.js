@@ -13,3 +13,15 @@ test('stops parsing on the first non-option when stopEarly is set', function (t)
 
     t.end();
 });
+
+test('includes -- with stop early', function (t) {
+    var argv = parse(['aaa', '--bbb', '--', 'ccc'], {
+        stopEarly: true
+    });
+
+    t.deepEqual(argv, {
+      _: ['aaa', '--bbb', '--', 'ccc']
+    });
+
+    t.end();
+});

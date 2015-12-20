@@ -41,7 +41,7 @@ module.exports = function (args, opts) {
     
     var notFlags = [];
 
-    if (args.indexOf('--') !== -1) {
+    if (!opts.stopEarly && args.indexOf('--') !== -1) {
         notFlags = args.slice(args.indexOf('--')+1);
         args = args.slice(0, args.indexOf('--'));
     }
