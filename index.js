@@ -1,5 +1,6 @@
 module.exports = function (args, opts) {
     if (!opts) opts = {};
+    if (!args) args = process.argv.slice(2);
     
     var flags = { bools : {}, strings : {}, unknownFn: null };
 
