@@ -34,3 +34,18 @@ test('already a number', function (t) {
     t.deepEqual(typeof argv._[0], 'number');
     t.end();
 });
+
+test('scientific notation infinity', function (t) {
+    // These numbers evaluate to Infinity
+    var argv = parse([
+        '-x', '87e3202',
+        '87e3202'
+    ]);
+    t.deepEqual(argv, {
+        x : '87e3202',
+        _ : [ '87e3202' ]
+    });
+    t.deepEqual(typeof argv.x, 'string');
+    t.deepEqual(typeof argv._[0], 'string');
+    t.end();
+});
