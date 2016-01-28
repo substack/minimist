@@ -231,6 +231,7 @@ function hasKey (obj, keys) {
 function isNumber (x) {
     if (typeof x === 'number') return true;
     if (/^0x[0-9a-f]+$/i.test(x)) return true;
-    return /^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(e[-+]?\d+)?$/.test(x);
+    return /^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(e[-+]?\d+)?$/.test(x) &&
+      Number(x) !== Infinity;
 }
 
