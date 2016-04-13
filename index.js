@@ -146,8 +146,8 @@ module.exports = function (args, opts) {
                     break;
                 }
                 
-                if (/[A-Za-z]/.test(letters[j])
-                && /-?\d+(\.\d*)?(e-?\d+)?$/.test(next)) {
+                if (/-?\d+(\.\d*)?(e-?\d+)?$/.test(next) &&
+                    /[A-Za-z]/.test(letters[j])) {
                     setArg(letters[j], next, arg);
                     broken = true;
                     break;
