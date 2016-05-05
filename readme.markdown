@@ -3,7 +3,7 @@
 parse argument options
 
 This module is the guts of optimist's argument parser without all the
-fanciful decoration.
+fanciful decoration. If you're looking for an abstraction layer that simplifies minimist's behaviour, try [args](https://github.com/leo/args).
 
 [![browser support](https://ci.testling.com/substack/minimist.png)](http://ci.testling.com/substack/minimist)
 
