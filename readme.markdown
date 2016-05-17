@@ -7,7 +7,7 @@ fanciful decoration.
 
 [![browser support](https://ci.testling.com/substack/minimist.png)](http://ci.testling.com/substack/minimist)
 
-[![build status](https://secure.travis-ci.org/substack/minimist.png)](http://travis-ci.org/substack/minimist)
+[![build status](https://api.travis-ci.org/substack/minimist.svg?branch=master)](http://travis-ci.org/substack/minimist)
 
 # example
 
