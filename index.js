@@ -229,5 +229,5 @@ function hasKey (obj, keys) {
 }
 
 function isNumber (number) {
-    return !!Number(String(number))
+    return typeof number == 'string' && number === '0' || !!Number(String(number));
 }

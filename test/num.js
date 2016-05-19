@@ -7,6 +7,7 @@ test('nums', function (t) {
         '-y', '5.67',
         '-z', '1e7',
         '-w', '10f',
+        '--zero', '0',
         '--hex', '0xdeadbeef',
         '789'
     ]);
@@ -15,6 +16,7 @@ test('nums', function (t) {
         y : 5.67,
         z : 1e7,
         w : '10f',
+        zero: 0,
         hex : 0xdeadbeef,
         _ : [ 789 ]
     });
