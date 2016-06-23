@@ -96,7 +96,6 @@ module.exports = function (args, opts) {
         
 		// Using [^] instead of . because js doesn't support the
 		// 'dotall' regex modifier.
-		try {
         if (isStr && (m=arg.match(/^--([^\s=]+)(?:=([^]*))$/))) {
             var key = m[1];
             var value = m[2];
@@ -190,10 +189,6 @@ module.exports = function (args, opts) {
                 argv._.push.apply(argv._, args.slice(i + 1));
                 break;
             }
-        }
-        }
-        catch ( error ) {
-        	throw error + require('util').inspect( arg ) ;
         }
     }
     
