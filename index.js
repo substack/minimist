@@ -92,27 +92,28 @@ module.exports = function (args, opts) {
     }
 
     for (var i = 0; i < args.length; i++) {
-        var arg = args[i], m;
+        var arg = args[i], m, isStr = typeof arg === 'string' ;
         
-        if ((m=arg.match(/^--([^\s=]+)(?:=([^]*))?$/))) {
-            // Using [^] instead of . because js doesn't support the
-            // 'dotall' regex modifier.
-            //var m = arg.match(/^--([^=]+)=([\s\S]*)$/);
+		// Using [^] instead of . because js doesn't support the
+		// 'dotall' regex modifier.
+		try {
+        if (isStr && (m=arg.match(/^--([^\s=]+)(?:=([^]*))$/))) {
             var key = m[1];
             var value = m[2];
+            console.log( value ) ;
             if (flags.bools[key]) {
                 value = value !== 'false';
             }
             setArg(key, value, arg);
         }
-        else if ((m=arg.match(/^--no-([^\s]+)$/))) {
+        else if (isStr && (m=arg.match(/^--no-([^\s]+)$/))) {
             var key = m[1];
             setArg(key, false, arg);
         }
-        else if ((m=arg.match(/^--([^\s]+)$/))) {
+        else if (isStr && (m=arg.match(/^--([^\s]+)$/))) {
             var key = m[1];
             var next = args[i + 1];
-            if (next !== undefined && !/^--?[^\s](?:=([^]*))?$/.test(next)
+            if (next !== undefined && !/^--?[^\s]+(?:=([^]*))?$/.test(next)
             && !flags.bools[key]
             && !flags.allBools
             && (aliases[key] ? !aliasIsBoolean(key) : true)) {
@@ -164,7 +165,7 @@ module.exports = function (args, opts) {
             
             var key = arg.slice(-1)[0];
             if (!broken && key !== '-') {
-                if (args[i+1] && !/^--?[^\s](?:=([^]*))?$/.test(args[i+1])
+                if (args[i+1] && !/^--?[^\s]+(?:=([^]*))?$/.test(args[i+1])
                 && !flags.bools[key]
                 && (aliases[key] ? !aliasIsBoolean(key) : true)) {
                     setArg(key, args[i+1], arg);
@@ -189,6 +190,10 @@ module.exports = function (args, opts) {
                 argv._.push.apply(argv._, args.slice(i + 1));
                 break;
             }
+        }
+        }
+        catch ( error ) {
+        	throw error + require('util').inspect( arg ) ;
         }
     }
     

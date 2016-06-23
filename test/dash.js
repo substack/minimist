@@ -2,10 +2,13 @@ var parse = require('../');
 var test = require('tape');
 
 test('-', function (t) {
-    t.plan(5);
+    t.plan(4);
     t.deepEqual(parse([ '-n', '-' ]), { n: '-', _: [] });
     t.deepEqual(parse([ '-' ]), { _: [ '-' ] });
-    t.deepEqual(parse([ '-f-' ]), { f: '-', _: [] });
+    
+    // Note by @cronvel: it does not make sense, this shouldn't be the expected behaviour
+    //t.deepEqual(parse([ '-f-' ]), { f: '-', _: [] });
+    
     t.deepEqual(
         parse([ '-b', '-' ], { boolean: 'b' }),
         { b: true, _: [ '-' ] }
