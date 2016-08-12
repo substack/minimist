@@ -59,7 +59,7 @@ module.exports = function (args, opts) {
         var value = !flags.strings[key] && isNumber(val)
             ? Number(val) : val
         ;
-        setKey(argv, key.split('.'), value);
+        setKey(argv, splitKey(key), value);
         
         (aliases[key] || []).forEach(function (x) {
             setKey(argv, x.split('.'), value);
@@ -68,6 +68,7 @@ module.exports = function (args, opts) {
 
     function setKey (obj, keys, value) {
         var o = obj;
+        keys = typeof keys === 'string' ? [keys] : keys;
         keys.slice(0,-1).forEach(function (key) {
             if (o[key] === undefined) o[key] = {};
             o = o[key];
@@ -83,7 +84,11 @@ module.exports = function (args, opts) {
         else {
             o[key] = [ o[key], value ];
         }
-    }
+    } 
+
+    function splitKey(key) { 
+        return opts.parseKeyObject === false ? key : key.split('.');
+     }
     
     function aliasIsBoolean(key) {
       return aliases[key].some(function (x) {
@@ -194,8 +199,8 @@ module.exports = function (args, opts) {
     }
     
     Object.keys(defaults).forEach(function (key) {
-        if (!hasKey(argv, key.split('.'))) {
-            setKey(argv, key.split('.'), defaults[key]);
+        if (!hasKey(argv, splitKey(key))) {
+            setKey(argv, splitKey(key), defaults[key]);
             
             (aliases[key] || []).forEach(function (x) {
                 setKey(argv, x.split('.'), defaults[key]);
@@ -220,6 +225,7 @@ module.exports = function (args, opts) {
 
 function hasKey (obj, keys) {
     var o = obj;
+    keys = typeof keys === 'string' ? [keys] : keys;
     keys.slice(0,-1).forEach(function (key) {
         o = (o[key] || {});
     });
