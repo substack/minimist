@@ -1,4 +1,11 @@
 module.exports = function (args, opts) {
+    function getKey(input) {
+        if (!input) return null;
+        return opts.camelCase !== true ? input : input.replace(/-(.)/g, function(match, group1) {
+            return group1.toUpperCase();
+        });
+    }
+
     if (!opts) opts = {};
     
     var flags = { bools : {}, strings : {}, unknownFn: null };
@@ -47,11 +54,13 @@ module.exports = function (args, opts) {
     }
 
     function argDefined(key, arg) {
+        key = getKey(key);
         return (flags.allBools && /^--[^=]+$/.test(arg)) ||
             flags.strings[key] || flags.bools[key] || aliases[key];
     }
 
     function setArg (key, val, arg) {
+        key = getKey(key);
         if (arg && flags.unknownFn && !argDefined(key, arg)) {
             if (flags.unknownFn(arg) === false) return;
         }
@@ -69,6 +78,7 @@ module.exports = function (args, opts) {
     function setKey (obj, keys, value) {
         var o = obj;
         keys.slice(0,-1).forEach(function (key) {
+            key = getKey(key);
             if (o[key] === undefined) o[key] = {};
             o = o[key];
         });
