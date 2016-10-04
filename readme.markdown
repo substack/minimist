@@ -63,6 +63,12 @@ argument names to use as aliases
 * `opts.default` - an object mapping string argument names to default values
 * `opts.stopEarly` - when true, populate `argv._` with everything after the
 first non-option
+* `opts.requireEquals` - when true double hyphenated arguments can only be given
+a value by specifying the value after a `=`. This allows double hyphenated
+arguments to be followed by, for example, pathnames without the pathname being
+treated as a value for the preceding double hyphenated argument. E.g., when set
+`--foo=abc` is argument `foo` with value `abc`, but `--foo abc` is argument `foo`
+with a separate `argv._` element containing `abc`.
 * `opts['--']` - when true, populate `argv._` with everything before the `--`
 and `argv['--']` with everything after the `--`. Here's an example:
 
