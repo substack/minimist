@@ -1,7 +1,7 @@
 module.exports = function (args, opts) {
     if (!opts) opts = {};
     
-    var flags = { bools : {}, strings : {}, unknownFn: null };
+    var flags = { bools : {}, strings : {}, unknownFn: null, requireEquals: opts.requireEquals };
 
     if (typeof opts['unknown'] === 'function') {
         flags.unknownFn = opts['unknown'];
@@ -113,7 +113,9 @@ module.exports = function (args, opts) {
         else if (/^--.+/.test(arg)) {
             var key = arg.match(/^--(.+)/)[1];
             var next = args[i + 1];
-            if (next !== undefined && !/^-/.test(next)
+            if (flags.requireEquals) {
+                setArg(key, flags.strings[key] ? '' : true, arg);
+            } else if (next !== undefined && !/^-/.test(next)
             && !flags.bools[key]
             && !flags.allBools
             && (aliases[key] ? !aliasIsBoolean(key) : true)) {
