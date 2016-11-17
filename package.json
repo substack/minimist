@@ -36,6 +36,9 @@
     "parser",
     "optimist"
   ],
+  "files": [
+    "index.js"
+  ],
   "author": {
     "name": "James Halliday",
     "email": "mail@substack.net",
