@@ -53,8 +53,9 @@ Any arguments after `'--'` will not be parsed and will end up in `argv._`.
 
 options can be:
 
-* `opts.string` - a string or array of strings argument names to always treat as
-strings
+* `opts.string` - a string or array of strings of argument names whose values to
+always treat as strings. if `true` will treat all argument values as strings
+regardless of name.
 * `opts.boolean` - a boolean, string or array of strings to always treat as
 booleans. if `true` will treat all double hyphenated arguments without equal signs
 as boolean (e.g. affects `--foo`, not `-f` or `--foo=bar`)

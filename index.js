@@ -14,6 +14,10 @@ module.exports = function (args, opts) {
           flags.bools[key] = true;
       });
     }
+
+    if (typeof opts['strings'] === 'boolean' && opts['strings']) {
+        flags.allStrings = true;
+    }
     
     var aliases = {};
     Object.keys(opts.alias || {}).forEach(function (key) {
@@ -56,7 +60,7 @@ module.exports = function (args, opts) {
             if (flags.unknownFn(arg) === false) return;
         }
 
-        var value = !flags.strings[key] && isNumber(val)
+        var value = !flags.allStrings && !flags.strings[key] && isNumber(val)
             ? Number(val) : val
         ;
         setKey(argv, key.split('.'), value);
