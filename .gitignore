@@ -1,8 +1,0 @@
-*.log
-pids
-*.pid
-*.seed
-*sublime*
-lib-cov
-coverage
-node_modules
