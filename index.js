@@ -94,7 +94,7 @@ module.exports = function (args, opts) {
           return flags.bools[x];
       });
     }
-
+    var posInd = 0
     for (var i = 0; i < args.length; i++) {
         var arg = args[i];
         
@@ -186,9 +186,10 @@ module.exports = function (args, opts) {
         }
         else {
             if (!flags.unknownFn || flags.unknownFn(arg) !== false) {
-                var asString = flags.strings[i] || flags.strings['_'] || !isNumber(arg);
+                var asString = flags.strings[posInd] || flags.strings['_'] || !isNumber(arg);
                 argv._.push(asString ? arg : Number(arg));
             }
+            posInd++;
             if (opts.stopEarly) {
                 argv._.push.apply(argv._, args.slice(i + 1));
                 break;
