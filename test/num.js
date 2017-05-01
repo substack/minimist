@@ -8,7 +8,8 @@ test('nums', function (t) {
         '-z', '1e7',
         '-w', '10f',
         '--hex', '0xdeadbeef',
-        '789'
+        '789',
+        '123f'
     ]);
     t.deepEqual(argv, {
         x : 1234,
@@ -16,7 +17,7 @@ test('nums', function (t) {
         z : 1e7,
         w : '10f',
         hex : 0xdeadbeef,
-        _ : [ 789 ]
+        _ : [ 789, '123f' ]
     });
     t.deepEqual(typeof argv.x, 'number');
     t.deepEqual(typeof argv.y, 'number');

@@ -97,6 +97,15 @@ test('stringArgs', function (t) {
     t.same(s[0], '  ');
     t.same(typeof s[1], 'string');
     t.same(s[1], '  ');
+
+    s = parse(['11', '22', '33'], {string: [0, 2]})._;
+    t.deepEqual(s, ['11', 22, '33'])
+    
+    s = parse(
+        ['--foo', '1', '11', '--bar', '4', '22', '33'],
+        {string: [0, 2]})._;
+    t.deepEqual(s, ['11', 22, '33'])
+
     t.end();
 });
 
