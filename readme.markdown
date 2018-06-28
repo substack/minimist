@@ -1,3 +1,5 @@
+DEPRECATED: Thank you all for using this module! This project is no longer maintained, please consult [#115](https://github.com/substack/minimist/issues/115) for a list of alternatives.
+
 # minimist
 
 parse argument options
