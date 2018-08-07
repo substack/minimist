@@ -99,7 +99,6 @@ module.exports = function (args, opts) {
         if (isStr && (m=arg.match(/^--([^\s=]+)(?:=([^]*))$/))) {
             var key = m[1];
             var value = m[2];
-            console.log( value ) ;
             if (flags.bools[key]) {
                 value = value !== 'false';
             }
