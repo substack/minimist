@@ -12,6 +12,9 @@
     "test": "tap test/*.js",
     "coverage": "covert test/*.js"
   },
+  "files": [
+    "index.js"
+  ],
   "testling": {
     "files": "test/*.js",
     "browsers": [
