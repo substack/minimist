@@ -9,7 +9,7 @@ fanciful decoration.
 
 [![build status](https://secure.travis-ci.org/substack/minimist.png)](http://travis-ci.org/substack/minimist)
 
-# example
+# Example
 
 ``` js
 var argv = require('minimist')(process.argv.slice(2));
@@ -30,10 +30,11 @@ $ node example/parse.js -x 3 -y 4 -n5 -abc --beep=boop foo bar baz
   a: true,
   b: true,
   c: true,
-  beep: 'boop' }
+  beep: 'boop'
+}
 ```
 
-# methods
+# Methods
 
 ``` js
 var parseArgs = require('minimist')
@@ -66,10 +67,12 @@ first non-option
 * `opts['--']` - when true, populate `argv._` with everything before the `--`
 and `argv['--']` with everything after the `--`. Here's an example:
 
-  ```
+  ```javascript
   > require('./')('one two three -- four five --six'.split(' '), { '--': true })
-  { _: [ 'one', 'two', 'three' ],
-    '--': [ 'four', 'five', '--six' ] }
+  {
+    _: [ 'one', 'two', 'three' ],
+    '--': [ 'four', 'five', '--six' ]
+  }
   ```
 
   Note that with `opts['--']` set, parsing for arguments still stops after the
@@ -79,7 +82,7 @@ and `argv['--']` with everything after the `--`. Here's an example:
 defined in the `opts` configuration object. If the function returns `false`, the
 unknown option is not added to `argv`.
 
-# install
+# Install
 
 With [npm](https://npmjs.org) do:
 
@@ -87,6 +90,6 @@ With [npm](https://npmjs.org) do:
 npm install minimist
 ```
 
-# license
+# License
 
 MIT
