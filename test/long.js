@@ -18,6 +18,11 @@ test('long opts', function (t) {
         'long capture eq'
     );
     t.deepEqual(
+        parse([ '--pow', 'xixxle' ], {requireEquals: true}),
+        { pow : true, _ : ['xixxle'] },
+        'long capture requireEquals'
+    );
+    t.deepEqual(
         parse([ '--host', 'localhost', '--port', '555' ]),
         { host : 'localhost', port : 555, _ : [] },
         'long captures sp'
