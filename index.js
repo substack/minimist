@@ -175,12 +175,21 @@ function hasKey (obj, keys) {
 
 function setKey (obj, keys, value) {
     var o = obj;
-    keys.slice(0,-1).forEach(function (key) {
+    for (var i = 0; i < keys.length-1; i++) {
+        var key = keys[i];
+        if (key === '__proto__') return;
         if (o[key] === undefined) o[key] = {};
+        if (o[key] === Object.prototype || o[key] === Number.prototype
+            || o[key] === String.prototype) o[key] = {};
+        if (o[key] === Array.prototype) o[key] = [];
         o = o[key];
-    });
-    
+    }
+
     var key = keys[keys.length - 1];
+    if (key === '__proto__') return;
+    if (o === Object.prototype || o === Number.prototype
+        || o === String.prototype) o = {};
+    if (o === Array.prototype) o = [];
     if (o[key] === undefined || typeof o[key] === 'boolean') {
         o[key] = value;
     }
