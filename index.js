@@ -101,13 +101,11 @@ module.exports = function (args, opts) {
     }
 
     for (var i = 0; i < args.length; i++) {
-        var arg = args[i];
+        var arg = args[i], m, isStr = typeof arg === 'string' ;
         
-        if (/^--.+=/.test(arg)) {
-            // Using [\s\S] instead of . because js doesn't support the
-            // 'dotall' regex modifier. See:
-            // http://stackoverflow.com/a/1068308/13216
-            var m = arg.match(/^--([^=]+)=([\s\S]*)$/);
+		// Using [^] instead of . because js doesn't support the
+		// 'dotall' regex modifier.
+        if (isStr && (m=arg.match(/^--([^\s=]+)(?:=([^]*))$/))) {
             var key = m[1];
             var value = m[2];
             if (flags.bools[key]) {
@@ -115,14 +113,14 @@ module.exports = function (args, opts) {
             }
             setArg(key, value, arg);
         }
-        else if (/^--no-.+/.test(arg)) {
-            var key = arg.match(/^--no-(.+)/)[1];
+        else if (isStr && (m=arg.match(/^--no-([^\s]+)$/))) {
+            var key = m[1];
             setArg(key, false, arg);
         }
-        else if (/^--.+/.test(arg)) {
-            var key = arg.match(/^--(.+)/)[1];
+        else if (isStr && (m=arg.match(/^--([^\s]+)$/))) {
+            var key = m[1];
             var next = args[i + 1];
-            if (next !== undefined && !/^-/.test(next)
+            if (next !== undefined && !/^--?[^\s]+(?:=([^]*))?$/.test(next)
             && !flags.bools[key]
             && !flags.allBools
             && (aliases[key] ? !aliasIsBoolean(key) : true)) {
@@ -137,7 +135,7 @@ module.exports = function (args, opts) {
                 setArg(key, flags.strings[key] ? '' : true, arg);
             }
         }
-        else if (/^-[^-]+/.test(arg)) {
+        else if (/^-[^\s-]+$/.test(arg)) {
             var letters = arg.slice(1,-1).split('');
             
             var broken = false;
@@ -145,7 +143,7 @@ module.exports = function (args, opts) {
                 var next = arg.slice(j+2);
                 
                 if (next === '-') {
-                    setArg(letters[j], next, arg)
+                    setArg(letters[j], next, arg);
                     continue;
                 }
                 
@@ -174,7 +172,7 @@ module.exports = function (args, opts) {
             
             var key = arg.slice(-1)[0];
             if (!broken && key !== '-') {
-                if (args[i+1] && !/^(-|--)[^-]/.test(args[i+1])
+                if (args[i+1] && !/^--?[^\s]+(?:=([^]*))?$/.test(args[i+1])
                 && !flags.bools[key]
                 && (aliases[key] ? !aliasIsBoolean(key) : true)) {
                     setArg(key, args[i+1], arg);
