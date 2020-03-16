@@ -2,7 +2,7 @@
 
 parse argument options
 
-This module is the guts of optimist's argument parser without all the
+This module is the guts of [optimist's](https://github.com/substack/node-optimist) argument parser without all the
 fanciful decoration.
 
 # example
