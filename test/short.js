@@ -41,6 +41,11 @@ test('short', function (t) {
         { h : 'localhost', p : 555, _ : [] },
         'short captures'
     );
+    t.deepEqual(
+        parse([ '-h', '' ]),
+        { h : '', _ : [] },
+        'short empty capture'
+    );
     t.end();
 });
  

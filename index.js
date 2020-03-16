@@ -174,7 +174,7 @@ module.exports = function (args, opts) {
             
             var key = arg.slice(-1)[0];
             if (!broken && key !== '-') {
-                if (args[i+1] && !/^(-|--)[^-]/.test(args[i+1])
+                if (args[i+1] !== undefined && !/^(-|--)[^-]/.test(args[i+1])
                 && !flags.bools[key]
                 && (aliases[key] ? !aliasIsBoolean(key) : true)) {
                     setArg(key, args[i+1], arg);
