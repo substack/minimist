@@ -153,6 +153,18 @@ test('boolean --boool=true', function (t) {
     t.end();
 });
 
+test('boolean --boool, with real true', function (t) {
+    var parsed = parse(['--boool', true], {
+        default: {
+            boool: false
+        },
+        boolean: ['boool']
+    });
+
+    t.same(parsed.boool, true);
+    t.end();
+});
+
 test('boolean --boool=false', function (t) {
     var parsed = parse(['--boool=false'], {
         default: {

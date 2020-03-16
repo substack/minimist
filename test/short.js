@@ -17,6 +17,14 @@ test('short', function (t) {
         'short boolean'
     );
     t.deepEqual(
+        parse([ '-b', true ], {
+            alias:{ b: 'bar' },
+            boolean: ['bar']
+        }),
+        { b : true, bar: true, _ : [] },
+        'short with real true'
+    );
+    t.deepEqual(
         parse([ 'foo', 'bar', 'baz' ]),
         { _ : [ 'foo', 'bar', 'baz' ] },
         'bare'
