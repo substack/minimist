@@ -3,6 +3,7 @@
   "version": "1.2.5",
   "description": "parse argument options",
   "main": "index.js",
+  "files": ["readme.markdown"],
   "devDependencies": {
     "covert": "^1.0.0",
     "tap": "~0.4.0",
