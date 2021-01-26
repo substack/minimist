@@ -17,9 +17,8 @@ test('-', function (t) {
 });
 
 test('-a -- b', function (t) {
-    t.plan(3);
+    t.plan(2);
     t.deepEqual(parse([ '-a', '--', 'b' ]), { a: true, _: [ 'b' ] });
-    t.deepEqual(parse([ '--a', '--', 'b' ]), { a: true, _: [ 'b' ] });
     t.deepEqual(parse([ '--a', '--', 'b' ]), { a: true, _: [ 'b' ] });
 });
 
